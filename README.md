@@ -6,7 +6,7 @@
 
 *Chromatic aberration · Iridescent shimmer · Pointer-tracked spotlight · GPU-adaptive rendering*
 
-[![Version](https://img.shields.io/badge/version-1.0.0-a78bfa?style=flat-square)](https://github.com/your-org/liquid-glass)
+[![Version](https://img.shields.io/badge/version-1.0.0-a78bfa?style=flat-square)](https://github.com/BorisMalts/Vortex-Glass?tab=readme-ov-file)
 [![License](https://img.shields.io/badge/license-MIT-818cf8?style=flat-square)](LICENSE)
 [![Size](https://img.shields.io/badge/gzipped-~3kb-34d399?style=flat-square)](#)
 [![Zero deps](https://img.shields.io/badge/dependencies-zero-f472b6?style=flat-square)](#)
