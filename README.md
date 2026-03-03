@@ -84,21 +84,8 @@ All four layers are GPU-adaptive: on low-end devices the expensive SVG filter is
 ### From npm
 
 ```bash
-npm install liquid-glass
+git clone https://github.com/BorisMalts/Vortex-Glass
 ```
-
-### CDN (ESM)
-
-```html
-<script type="module">
-  import { initLiquidGlass } from 'https://cdn.jsdelivr.net/npm/liquid-glass@2/liquid-glass.js';
-  initLiquidGlass();
-</script>
-```
-
-### Manual
-
-Download `liquid-glass.js` and import it as an ES module — no bundler or build step needed.
 
 ---
 
