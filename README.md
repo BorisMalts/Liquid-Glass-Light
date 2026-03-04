@@ -673,11 +673,6 @@ A: Override `animation` directly:
 
 ---
 
-**Q: Voice message bubbles look like a blob of glass.**
-A: Add `.vb-wrap` to your voice bubble element — the library explicitly excludes `.vb-wrap` from the `lg-breathe` animation and constrains its width to `fit-content`.
-
----
-
 **Q: How do I use this in a high-frequency scroll list?**
 A: Don't apply `.lg` directly to list items. Use `attachElement()` / `detachElement()` in an `IntersectionObserver` callback to activate and deactivate the effect only for visible items.
 
