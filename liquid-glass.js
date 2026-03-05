@@ -1,5 +1,5 @@
 // =============================================================================
-// @fileoverview liquid-glass.js  ·  v 1.1.0
+// @fileoverview liquid-glass.js  ·  v 1.1.1
 //
 // Ultra-premium «Liquid Glass» rendering library.
 // Surpasses Apple's Liquid Glass with:
@@ -1208,6 +1208,7 @@ function _buildCSS() {
     .lg           { border-radius: 16px !important; transform: none !important; }
     .lg-outer     { filter: none !important; }
     .lg-caustic-canvas { display: none; }
+}
 `;
 }
 
@@ -1313,6 +1314,12 @@ function _attach(el) {
     const tiltX       = _createSpring(0);
     const tiltY       = _createSpring(0);
 
+    // ── Declare `es` before handlers so closures reference a defined binding.
+    // The object is assigned below after the handlers are defined; by the time
+    // any pointer event fires the assignment will have completed.
+    /** @type {ElementState} */
+    let es;
+
     // ── Pointer event handlers ───────────────────────────────────────────────
 
     /** @param {PointerEvent} e */
@@ -1358,7 +1365,7 @@ function _attach(el) {
     ro.observe(el);
 
     // ── Assemble state ───────────────────────────────────────────────────────
-    const es = /** @type {ElementState} */ ({
+    es = /** @type {ElementState} */ ({
         canvas: cvs, ctx2d, ro,
         springX, springY, hoverSpring, tiltX, tiltY,
         width: w, height: h,
