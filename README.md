@@ -32,6 +32,7 @@
 ## Table of Contents
 
 - [Overview](#overview)
+- [What's New in v1.1.1](#whats-new-in-v111)
 - [What's New in v1.1.0](#whats-new-in-v110)
 - [Features](#features)
 - [Installation](#installation)
@@ -71,6 +72,53 @@
 | 🔮 Fresnel edge | Schlick approximation in GLSL | Edge glow that intensifies at grazing angles, tilt-aware |
 | 🫧 Thin-film | Per-fragment oil-slick interference | Iridescent shimmer that shifts with tilt and time |
 | 🌬️ Breathing | `lg-breathe` keyframe animation | Organic `border-radius` oscillation — the border feels alive |
+
+---
+
+## What's New in v1.1.1
+
+This is a patch release. No behaviour, API, or visual output has changed.
+
+### 🐛 Bug Fixes
+
+**`_buildCSS()` — unclosed `@media (prefers-reduced-motion: reduce)` block**
+
+The closing `}` for the reduced-motion media query was missing at the end of the returned CSS string. In most browsers this caused the parser to silently discard the ruleset entirely, meaning the accessibility override (`animation: none`, `transition: none`, `filter: none`) had no effect for users who had enabled reduced-motion in their OS settings.
+
+```css
+/* v1.1.0 — block never closed; rules were ignored by the parser */
+@media (prefers-reduced-motion: reduce) {
+    .lg { ... }
+    .lg-caustic-canvas { display: none; }
+↑ missing }
+
+/* v1.1.1 — correctly closed */
+@media (prefers-reduced-motion: reduce) {
+    .lg { ... }
+    .lg-caustic-canvas { display: none; }
+}
+```
+
+**`_attach()` — `es` referenced before declaration in pointer-event closures**
+
+Inside `_attach`, the `onEnter` and `onLeave` closures both wrote to `es.hovered`. However, `es` was declared with `const` *after* those closures — relying on function-scoped `var`-style hoisting that does not apply to `const`/`let`. Under strict temporal dead zone rules this is technically a bug, and any linter or bundler that inlines or reorders declarations (e.g. Rollup, esbuild) could produce a `ReferenceError` at runtime.
+
+The fix declares `es` with `let` *before* the handler definitions and assigns it after, making the reference order explicit and safe under all build tools.
+
+```js
+// v1.1.0 — es used inside closures before its const declaration
+const onEnter = () => { es.hovered = true; };   // ← es not yet declared
+const onLeave = () => { es.hovered = false; };  // ← es not yet declared
+// ...
+const es = { ... };   // declared here
+
+// v1.1.1 — es declared first, assigned after handlers, before _tracked.add()
+let es;                                         // ← declared here
+const onEnter = () => { es.hovered = true; };   // safe closure reference
+const onLeave = () => { es.hovered = false; };  // safe closure reference
+// ...
+es = { ... };   // assigned before any event can fire
+```
 
 ---
 
@@ -333,7 +381,7 @@ if (getGpuTier() === 'high') {
 ### `version()`
 
 ```ts
-function version(): '1.1.0'
+function version(): '1.1.1'
 ```
 
 Returns the library version string.
@@ -687,6 +735,11 @@ A: Override `backdrop-filter` on your element:
   -webkit-backdrop-filter: blur(10px) saturate(150%);
 }
 ```
+
+---
+
+**Q: Why did my reduced-motion preference have no effect in v1.1.0?**
+A: A missing closing brace in the `@media (prefers-reduced-motion: reduce)` block caused the browser to silently discard all rules inside it. This is fixed in v1.1.1 — upgrading restores correct accessibility behaviour.
 
 ---
 
