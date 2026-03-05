@@ -22,7 +22,7 @@
 //   initLiquidGlass();
 //   // Any element with class="lg" now gets the full effect.
 //
-// @version 1.1.0
+// @version 1.1.1
 // =============================================================================
 
 
